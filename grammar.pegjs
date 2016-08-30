@@ -23,12 +23,13 @@ SOFTWARE.
 */
 
 {
-  function iota(top) {
+  function iota(top, conv_to_double) {
     top = top | 0 // Ensure `top` is a number
     if (top <= 1) return '[' + top + ']'
     var rst = []
     for (var i = 0; i < top; i++) {
       rst[i] = i + 1;
+      if (conv_to_double) rst[i] += '.0'
     }
     return '[' + rst.join(',') + ']'
   }
@@ -82,17 +83,21 @@ expr_1
   }
   / CALL_OPEN $1:expr $2:expr* CALL_CLOSE
   {
-    const b = $1;
+    const b = $1
+    const tail = $2
     if ('.' === b.charAt(0)) {
-      return '(' + $2 + ')' + b;
+      if (tail.length > 1) {
+        return '(' + tail[0] + ')' + b + '(' + tail.slice(1) + ')'
+      }
+      return '(' + tail + ')' + b
     }
     if (b.startsWith('function ')) {
-      const c = b.substring(9, b.indexOf('('));
+      const c = b.substring(9, b.indexOf('('))
       if ('' !== c.trim()) {
-        return b + c + '(' + $2 + ')';
+        return b + c + '(' + tail + ')'
       }
     }
-    return '(' + b + ')(' + $2 + ')';
+    return '(' + b + ')(' + tail + ')'
   }
   / LIST_OPEN $2:expr* CALL_CLOSE
   {
@@ -285,16 +290,35 @@ Ident "ident"
   }
 
 Integer "integer"
-  = '_'? ('0' / ([1-9][0-9]*)) _
+  = Float
+  / '_'? ('0' / ([1-9][0-9]*)) _
   {
     const val = text().trim()
     var rst
     if (val.charAt(0) === '_') {
-      rst = iota(parseInt(val.substring(1), 10))
+      rst = iota(parseInt(val.substring(1), 10), false)
     } else {
       rst = parseInt(val, 10) + ''
     }
     return rst
+  }
+
+Float "float"
+  = '_' ('0' / ([1-9][0-9]*)) '.' '0'+ _
+  {
+    const val = text().trim()
+    var rst
+    if (val.charAt(0) === '_') {
+      rst = iota(parseInt(val.substring(1), 10), true)
+    } else {
+      rst = parseInt(val, 10) + '.0'
+    }
+    return rst
+  }
+  / ('0' / ([1-9][0-9]*)) '.' [0-9]+ _
+  {
+    const val = text().trim()
+    return val
   }
 
 _ "whitespace"

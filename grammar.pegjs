@@ -72,6 +72,7 @@ expr_1
       return func
     }
   }
+  / string
   / Integer
   / func
   / $1:UNARY $2:expr
@@ -96,6 +97,32 @@ expr_1
   {
     return '{' + $1 + '}'
   }
+
+string
+  = '"' $1:str_char* '"' _
+  {
+    return '"' + $1.join('') + '"'
+  }
+
+str_char
+  = unescaped
+  / escaped
+
+escaped
+  = '\\' (('u' hex hex hex hex) / 'r' / 't' / 'b' / 'n' / 'f' / '\\' / '"')
+  {
+    return text()
+  }
+
+hex
+  = [0-9a-fA-F]
+
+/*
+rule unescaped is copied from
+https://medium.com/@daffl/beyond-regex-writing-a-parser-in-javascript-8c9ed10576a6
+*/
+unescaped
+  = [\x20-\x21\x23-\x5B\x5D-\u10FFFF]
 
 map_pair
   = $1:expr ',' _ $2:expr

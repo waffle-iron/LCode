@@ -36,11 +36,31 @@ SOFTWARE.
   var id_func_counter = 0;
 }
 
+file
+  = $1:expr $2:file?
+  {
+    return $1 + ($2 == null ? '' : '\n' + $2)
+  }
+
+declr
+  = DEFINE $1:Ident $2:func
+  {
+    return 'function ' + $1 + $2.substring(9)
+  }
+  / DEFINE $1:Ident $2:expr
+  {
+    return 'var ' + $1 + ' = (' + $2 + ')'
+  }
+
+DEFINE
+  = '.def' 'ine'? _
+
 expr
   = expr_3
 
 expr_1
-  = $1:Ident
+  = declr
+  / $1:Ident
   {
     var func = $1
     switch (func.charAt(0)) {

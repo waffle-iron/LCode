@@ -39,7 +39,7 @@ SOFTWARE.
 file
   = $1:expr $2:file?
   {
-    return $1 + ($2 == null ? '' : '\n' + $2)
+    return $1 + ($2 == null ? '' : ';\n' + $2)
   }
 
 declr
@@ -82,6 +82,10 @@ expr_1
   {
     var sel = $1
     if (sel.charAt(0) == '.') return '(' + $2 + ')' + sel
+    if (sel.startsWith('function ')) {
+      var fname = sel.substring(9, sel.indexOf('('))
+      return sel + fname + '(' + $2 + ')'
+    }
     return '(' + sel + ')(' + $2 + ')'
   }
   / LIST_OPEN $2:expr* CALL_CLOSE

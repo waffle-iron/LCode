@@ -222,14 +222,14 @@ func_body
   = $2:expr $3:(';' _ expr)*
   {
     const tail = $3
-    const tail_len = tail.length
-    if (0 === tail_len) {
-      return "return (" + $2 + ")";
+    const tail_len_m1 = tail.length - 1
+    if (0 === tail_len_m1 + 1) {
+      return 'return (' + $2 + ')'
     }
-    for (var b = $2 + '; ', c = 0; c < tail_len - 1; c++) {
-      b += tail[c][2], b += '; ';
+    for (var b = $2 + '; ', c = 0; c < tail_len_m1; c++) {
+      b += tail[c][2], b += '; '
     }
-    return b + 'return (' + tail[tail_len - 1][2] + ')';
+    return b + 'return (' + tail[tail_len_m1][2] + ')'
   }
 
 func
@@ -294,31 +294,26 @@ Integer "integer"
   / '_'? ('0' / ([1-9][0-9]*)) _
   {
     const val = text().trim()
-    var rst
     if (val.charAt(0) === '_') {
-      rst = iota(parseInt(val.substring(1), 10), false)
+      return iota(parseInt(val.substring(1), 10), false)
     } else {
-      rst = parseInt(val, 10) + ''
+      return parseInt(val, 10) + ''
     }
-    return rst
   }
 
 Float "float"
   = '_' ('0' / ([1-9][0-9]*)) '.' '0'+ _
   {
     const val = text().trim()
-    var rst
     if (val.charAt(0) === '_') {
-      rst = iota(parseInt(val.substring(1), 10), true)
+      return iota(parseInt(val.substring(1), 10), true)
     } else {
-      rst = parseInt(val, 10) + '.0'
+      return parseInt(val, 10) + '.0'
     }
-    return rst
   }
   / ('0' / ([1-9][0-9]*)) '.' [0-9]+ _
   {
-    const val = text().trim()
-    return val
+    return text().trim()
   }
 
 _ "whitespace"

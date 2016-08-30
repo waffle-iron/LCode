@@ -60,6 +60,7 @@ expr
 
 expr_1
   = declr
+  / boolean
   / $1:Ident
   {
     var func = $1
@@ -81,13 +82,17 @@ expr_1
   }
   / CALL_OPEN $1:expr $2:expr* CALL_CLOSE
   {
-    var sel = $1
-    if (sel.charAt(0) == '.') return '(' + $2 + ')' + sel
-    if (sel.startsWith('function ')) {
-      var fname = sel.substring(9, sel.indexOf('('))
-      return sel + fname + '(' + $2 + ')'
+     var b = $1;
+    if ('.' == b.charAt(0)) {
+      return "(" + $2 + ")" + b;
     }
-    return '(' + sel + ')(' + $2 + ')'
+    if (b.startsWith('function ')) {
+      var c = b.substring(9, b.indexOf('('));
+      if ('' !== c.trim()) {
+        return b + c + '(' + $2 + ')';
+      }
+    }
+    return '(' + b + ')(' + $2 + ')';
   }
   / LIST_OPEN $2:expr* CALL_CLOSE
   {
@@ -96,6 +101,12 @@ expr_1
   / MAP_OPEN $1:map_pair* MAP_CLOSE
   {
     return '{' + $1 + '}'
+  }
+
+boolean
+  = $1:('true' / 'false') _
+  {
+    return $1
   }
 
 string
@@ -202,11 +213,23 @@ UNARY
     return $1
   }
 
+func_body
+  = $2:expr $3:(';' _ expr)*
+  {
+    if (0 == $3.length) {
+      return "return (" + $2 + ")";
+    }
+    for (var b = $2 + '; ', c = 0; c < $3.length - 1; c++) {
+      b += $3[c][2], b += '; ';
+    }
+    return b + 'return (' + $3[$3.length - 1][2] + ')';
+  }
+
 func
   = ID_FUNC
-  / FUNC_OPEN $1:param_list? $2:expr FUNC_CLOSE
+  / FUNC_OPEN $1:param_list? $2:func_body FUNC_CLOSE
   {
-    return ($1 == null ? 'function ()' : $1) + ' { return (' + $2 + ') }'
+    return ($1 == null ? 'function ()' : $1) + ' { ' + $2 + ' }'
   }
 
 FUNC_OPEN
@@ -215,24 +238,37 @@ FUNC_OPEN
 FUNC_CLOSE
   = ']' _
 
+ID_FUNC_CHAR
+  = $1:'_' _
+  {
+    return $1;
+  }
+
 ID_FUNC
-  = '_' _
+  = ID_FUNC_CHAR
   {
     var tmpname = '$' + id_func_counter++
     return 'function (' + tmpname + ') { return ' + tmpname + ' }'
   }
 
 param_list
-  = $1:Ident+ PARAM_INIT
+  = $1:(Ident / ID_FUNC_CHAR)+ PARAM_INIT
   {
-    return 'function (' + $1.join(',') + ')'
+    var params = $1
+    for (var i = 0; i < params.length; i++) {
+      if (params[i] == '_') {
+        var tmpname = '$' + id_func_counter++
+        params[i] = tmpname
+      }
+    }
+    return 'function (' + params.join(',') + ')'
   }
 
 PARAM_INIT
   = ':' _
 
 Ident "ident"
-  = [a-zA-Z] [a-zA-Z0-9$_]* _
+  = !boolean [a-zA-Z] [a-zA-Z0-9$_]* _
   {
     return text().trim()
   }

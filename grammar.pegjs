@@ -52,6 +52,10 @@ declr
   {
     return 'var ' + $1 + ' = (' + $2 + ')'
   }
+  / DEFINE $1:list $2:expr
+  {
+    return 'var ' + $1 + ' = (' + $2 + ')'
+  }
 
 DEFINE
   = '.def' 'ine'? _
@@ -99,13 +103,16 @@ expr_1
     }
     return '(' + b + ')(' + tail + ')'
   }
-  / LIST_OPEN $2:expr* CALL_CLOSE
-  {
-    return '[' + $2 + ']'
-  }
+  / list
   / MAP_OPEN $1:map_pair* MAP_CLOSE
   {
     return '{' + $1 + '}'
+  }
+
+list
+  = LIST_OPEN $2:expr* CALL_CLOSE
+  {
+    return '[' + $2 + ']'
   }
 
 boolean
@@ -254,8 +261,7 @@ ID_FUNC_CHAR
 ID_FUNC
   = ID_FUNC_CHAR
   {
-    var tmpname = '$' + id_func_counter++
-    return 'function (' + tmpname + ') { return ' + tmpname + ' }'
+    return 'function () {return Array.prototype.slice.call(arguments);}'
   }
 
 param_list
@@ -264,9 +270,8 @@ param_list
     var params = $1
     const params_len = params.length
     for (var i = 0; i < params_len; i++) {
-      if (params[i] === '_') {
-        var tmpname = '$' + id_func_counter++
-        params[i] = tmpname
+      if ('_' === params[i]) {
+        params[i] = '$' + id_func_counter++
       }
     }
     return 'function (' + params.join(',') + ')'

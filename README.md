@@ -8,6 +8,8 @@ You will need java8 and ant to be installed. Alternatively, you could choose to 
 Currently, the parser only converts the predefined source code into an AST.
 The optimizer and potentially, the runtime is not being worked on so far. (It will be worked on when the grammar supports most pre-1.0 constructs)
 
+To run with ant, do <code>ant run</code>
+
 # Incompatibilities between LCode and LCode pre-1.0
 
 ### Function calling syntax

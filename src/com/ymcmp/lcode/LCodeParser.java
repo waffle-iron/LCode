@@ -143,8 +143,17 @@ outer:  while (index.value < tokens.size()) {
             final Token tok = tokens.get(index.value++);
             switch (tok.tokenName) {
             case "BRACE_O": {
-                // TODO: Stuff
-                break;
+                if (index.value < tokens.size()) {
+                    final List<Map.ExprPair> nodes = new ArrayList<>();
+                    Token next = tokens.get(index.value++);
+                    while(!next.tokenName.equals("BRACE_C")) {
+                        index.value--;
+                        nodes.add(consMapPair(index));
+                        next = tokens.get(index.value++);
+}
+                    return new MapExpr(nodes.toArray(new ExprPair[nodes.size()]));
+                }
+                throw new AssertionError("Unclosed map literal");
             }
             default:
                 index.value--;
@@ -152,6 +161,23 @@ outer:  while (index.value < tokens.size()) {
             }
         }
         throw new AssertionError("Needs map composition literal or list composition literal");
+    }
+
+    /*
+     * consMapPair = consExpr COLON consExpr
+     */
+    private MapExpr.ExprPair consMapPair(IntRef index) {
+        if (index.value < tokens.size()) {
+            final Expr key = consExpr(index);
+            if (index.value < tokens.size()) {
+                final Token tok = tokens.get(index.value++);
+                if (tok.tokenName.equals("COLON")) {
+                    return new MapExpr.ExprPair(key, consExpr(index));
+                }
+            }
+            throw new AssertionError("Requires a colon");
+        }
+        throw new AssertionError("Needs a pair");
     }
 
     /*

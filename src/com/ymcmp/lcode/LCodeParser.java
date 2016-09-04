@@ -145,14 +145,14 @@ outer:  while (index.value < tokens.size()) {
             switch (tok.tokenName) {
             case "BRACE_O": {
                 if (index.value < tokens.size()) {
-                    final List<Map.ExprPair> nodes = new ArrayList<>();
+                    final List<MapExpr.ExprPair> nodes = new ArrayList<>();
                     Token next = tokens.get(index.value++);
                     while(!next.tokenName.equals("BRACE_C")) {
                         index.value--;
                         nodes.add(consMapPair(index));
                         next = tokens.get(index.value++);
 }
-                    return new MapExpr(nodes.toArray(new ExprPair[nodes.size()]));
+                    return new MapExpr(nodes.toArray(new MapExpr.ExprPair[nodes.size()]));
                 }
                 throw new AssertionError("Unclosed map literal");
             }

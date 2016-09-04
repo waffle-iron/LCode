@@ -26,7 +26,7 @@ import java.util.List;
  * QUOTE = [`'] <br>
  * USCRL = '_' <br>
  * COLON = ':' <br>
- * ARROW = '->' <br>
+ * ARROW = '-&gt;' <br>
  * MULOP = '*' <br>
  * DIVOP = '/' <br>
  * MODOP = '%' <br>

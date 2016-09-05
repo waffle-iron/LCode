@@ -12,6 +12,7 @@ import java.util.List;
  * The list of tokens:
  * <p>
  * _ = [ \t\r\n]* <br>
+ *   | '#|' (![\r\n]* [\r\n] '|')* ![\r\n]* <br>
  *   | '#' ![\r\n]* <br>
  * BOOL (ident) = 'true' | 'false' <br>
  * SYM (ident) = '$' [a-zA-Z0-9$_]* [?!]? <br>

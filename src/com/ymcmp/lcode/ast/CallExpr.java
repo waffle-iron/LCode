@@ -38,7 +38,11 @@ public class CallExpr extends Expr {
     public CallExpr(Expr selector, Expr... args) {
         this.selector = selector;
         this.args = args;
-        this.text = Arrays.asList(args)
+    }
+
+    @Override
+    public String getText() {
+        return Arrays.asList(args)
                 .stream()
                 .map(Expr::getText)
                 .collect(Collectors.joining(" ", selector.getText() + "(", ")"));

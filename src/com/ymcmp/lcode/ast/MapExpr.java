@@ -39,7 +39,11 @@ public class MapExpr extends Expr {
         public ExprPair(Expr left, Expr right) {
             this.left = left;
             this.right = right;
-            this.text = left.getText() + ":" + right.getText();
+        }
+
+        @Override
+        public String getText() {
+            return String.format("%s:%s", left.getText(), right.getText());
         }
 
         @Override
@@ -50,15 +54,18 @@ public class MapExpr extends Expr {
         @Override
         public Expr getChildNode(int nodeIndex) {
             switch (nodeIndex) {
-            case 0: return left;
-            case 1: return right;
-            default: return EmptyExpr.getInstance();
+            case 0:
+                return left;
+            case 1:
+                return right;
+            default:
+                return EmptyExpr.getInstance();
             }
         }
 
         @Override
         public String toTree() {
-          return String.format("(pair %s %s)", left.toTree(), right.toTree());
+            return String.format("(pair %s %s)", left.toTree(), right.toTree());
         }
     }
 
@@ -66,7 +73,11 @@ public class MapExpr extends Expr {
 
     public MapExpr(ExprPair... exprs) {
         this.exprs = exprs;
-        this.text = Arrays.asList(exprs)
+    }
+
+    @Override
+    public String getText() {
+        return Arrays.asList(exprs)
                 .stream()
                 .map(ExprPair::getText)
                 .collect(Collectors.joining(" ", "{", "}"));

@@ -35,7 +35,11 @@ public class SubscriptExpr extends Expr {
     public SubscriptExpr(Expr subscriptBase, Expr subspos) {
         this.subscriptBase = subscriptBase;
         this.subspos = subspos;
-        this.text = subscriptBase.getText() + "->" + subspos.getText();
+    }
+
+    @Override
+    public String getText() {
+        return String.format("%s->%s", subscriptBase.getText(), subspos.getText());
     }
 
     @Override

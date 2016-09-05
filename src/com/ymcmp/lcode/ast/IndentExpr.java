@@ -29,6 +29,7 @@ package com.ymcmp.lcode.ast;
  */
 public class IndentExpr extends Expr {
 
+    private final String text;
     private boolean ignoredIndent;
 
     public IndentExpr(String val) {
@@ -38,6 +39,11 @@ public class IndentExpr extends Expr {
     public IndentExpr(String val, boolean isIgnoredIndent) {
         this.text = val;
         this.ignoredIndent = isIgnoredIndent;
+    }
+
+    @Override
+    public String getText() {
+        return text;
     }
 
     @Override

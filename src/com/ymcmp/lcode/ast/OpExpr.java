@@ -24,13 +24,20 @@
 package com.ymcmp.lcode.ast;
 
 /**
- * 
+ *
  * @author plankp
  */
 public class OpExpr extends Expr {
 
+    private final String text;
+
     public OpExpr(String op) {
         this.text = op;
+    }
+
+    @Override
+    public String getText() {
+        return text;
     }
 
     @Override

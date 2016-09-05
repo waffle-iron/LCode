@@ -35,17 +35,13 @@ public abstract class Expr implements Serializable {
 
     public static Expr[] EMPTY_EXPR_LIST = new Expr[0];
 
-    protected String text;
-
-    public final String getText() {
-        return text;
-    }
+    public abstract String getText();
 
     public abstract int getChildNodes();
 
     public abstract Expr getChildNode(int nodeIndex);
 
     public String toTree() {
-        return getText();
+        return String.format("(%s)", getText());
     }
 }

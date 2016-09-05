@@ -29,8 +29,15 @@ package com.ymcmp.lcode.ast;
  */
 public class IntExpr extends NumberExpr {
 
+    private final String text;
+
     public IntExpr(String val) {
         this.text = val;
+    }
+
+    @Override
+    public String getText() {
+        return text;
     }
 
     @Override

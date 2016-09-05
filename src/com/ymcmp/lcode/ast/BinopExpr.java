@@ -36,7 +36,11 @@ public class BinopExpr extends Expr {
         this.left = left;
         this.op = new OpExpr(op);
         this.right = right;
-        this.text = left.getText() + op + right.getText();
+    }
+
+    @Override
+    public String getText() {
+        return String.format("%s%s%s", left.getText(), op, right.getText());
     }
 
     @Override

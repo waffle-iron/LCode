@@ -36,7 +36,11 @@ public class ListExpr extends Expr {
 
     public ListExpr(Expr... exprs) {
         this.exprs = exprs;
-        this.text = Arrays.asList(exprs)
+    }
+
+    @Override
+    public String getText() {
+        return Arrays.asList(exprs)
                 .stream()
                 .map(Expr::getText)
                 .collect(Collectors.joining(" ", "'(", ")"));

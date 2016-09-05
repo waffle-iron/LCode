@@ -24,13 +24,20 @@
 package com.ymcmp.lcode.ast;
 
 /**
- * 
+ *
  * @author plankp
  */
 public class SymbolExpr extends Expr {
 
+    private final String text;
+
     public SymbolExpr(String txt) {
         this.text = txt;
+    }
+
+    @Override
+    public String getText() {
+        return text;
     }
 
     @Override

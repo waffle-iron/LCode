@@ -40,9 +40,13 @@ public class FuncExpr extends Expr {
     public FuncExpr(IndentExpr[] params, Expr body) {
         this.params = params;
         this.body = body;
-        this.text = Arrays.asList(params)
+    }
+
+    @Override
+    public String getText() {
+        return Arrays.asList(params)
                 .stream().map(Expr::getText)
-                .collect(Collectors.joining(" ", "[", ":" + body.text + "]"));
+                .collect(Collectors.joining(" ", "[", ":" + body.getText() + "]"));
     }
 
     @Override

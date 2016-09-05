@@ -32,7 +32,11 @@ public final class EmptyExpr extends Expr {
     private static volatile EmptyExpr instance;
 
     private EmptyExpr() {
-        this.text = "";
+    }
+
+    @Override
+    public String getText() {
+        return "";
     }
 
     public static EmptyExpr getInstance() {

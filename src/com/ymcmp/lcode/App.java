@@ -6,7 +6,6 @@
 package com.ymcmp.lcode;
 
 import com.ymcmp.lcode.ast.Expr;
-import com.ymcmp.lcode.objutils.ObjUtils;
 import java.util.List;
 
 /**
@@ -19,7 +18,10 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        List<Token> apply = new LCodeLexer("# A map...\n{$a : 10 $b : 1.7 $c : [a : a](6) $d : {} $e : '()}").apply();
+        List<Token> apply = new LCodeLexer(""
+                + "#| A map...\n"
+                + "| And stuff..\n"
+                + "{$a : 10 $b : 1.7 $c : [a : a](6) $d : {} $e : '()}").apply();
         LCodeParser parser = new LCodeParser(apply);
         System.out.println("Raw tokens:");
         parser.tokens.forEach(System.out::print);

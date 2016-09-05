@@ -8,7 +8,7 @@ package com.ymcmp.lcode;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * The list of tokens:
  * <p>
  * _ = [ \t\r\n]* <br>
@@ -34,7 +34,8 @@ import java.util.List;
  * MODOP = '%' <br>
  * ADDOP = '+' <br>
  * SUBOP (arrow) = '-' <br>
- *
+ */
+/**
  * @author plankp
  */
 public class LCodeLexer {
@@ -53,7 +54,7 @@ public class LCodeLexer {
         for (int i = 0; i < arr_len; i++) {
             final char current = arr[i];
             if (isLCodeWhitespace(current)) {
-                StringBuilder buf = new StringBuilder();
+                final StringBuilder buf = new StringBuilder();
                 buf.append(current);
                 for (i++; i < arr_len; i++) {
                     if (!isLCodeWhitespace(arr[i])) {
@@ -64,16 +65,19 @@ public class LCodeLexer {
                 i--;
                 tokens.add(new Token("_", buf.toString()));
             } else if (current == '#') {
-                StringBuilder buf = new StringBuilder();
+                final StringBuilder buf = new StringBuilder();
                 buf.append(current);
-                for (i++; i < arr_len; i++) {
-                    char c = arr[i];
-                    if (c == '\r' || c == '\n') {
-                        break;
+                if (++i < arr_len) {
+                    if (arr[i] == '|') {
+                        // Enter multiline mode
+                        do {
+                            i = consumeToEOL(i + 1, arr_len, arr, buf) + 2;
+                        } while (arr[i] == '|');
+                        i--;
+                    } else {
+                        i = consumeToEOL(i, arr_len, arr, buf);
                     }
-                    buf.append(c);
                 }
-                i--;
                 tokens.add(new Token("_", buf.toString()));
             } else if (isLCodeQuote(current)) {
                 tokens.add(new Token("QUOTE", Character.toString(current)));
@@ -110,7 +114,7 @@ public class LCodeLexer {
             } else if (current == ')') {
                 tokens.add(new Token("PAREN_C", Character.toString(current)));
             } else if (isLCodeDigit(current)) {
-                StringBuilder buf = new StringBuilder();
+                final StringBuilder buf = new StringBuilder();
                 buf.append(current);
                 if (current != '0') {
                     for (i++; i < arr_len; i++) {
@@ -141,7 +145,7 @@ public class LCodeLexer {
                 }
                 tokens.add(new Token("NUM_I", buf.toString()));
             } else if (isLCodeIdentFirstChar(current)) {
-                StringBuilder buf = new StringBuilder();
+                final StringBuilder buf = new StringBuilder();
                 buf.append(current);
                 for (i++; i < arr_len; i++) {
                     if (!isLCodeIdent(arr[i])) {
@@ -173,6 +177,18 @@ public class LCodeLexer {
         }
 
         return tokens;
+    }
+
+    private int consumeToEOL(int i, final int arr_len, final char[] arr, StringBuilder buf) {
+        for (; i < arr_len; i++) {
+            char c = arr[i];
+            if (c == '\r' || c == '\n') {
+                break;
+            }
+            buf.append(c);
+        }
+        i--;
+        return i;
     }
 
     private boolean isLCodeWhitespace(char c) {

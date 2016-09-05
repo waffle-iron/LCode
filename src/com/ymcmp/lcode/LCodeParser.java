@@ -101,10 +101,10 @@ outer:  while (index.value < tokens.size()) {
     }
 
     /*
-     * consPostFix = consListLit consPostFixTail*
+     * consPostFix = consMapLit consPostFixTail*
      */
     private Expr consPostFix(IntRef index) {
-        return consPostFixTail(consListLit(index), index);
+        return consPostFixTail(consMapLit(index), index);
     }
 
     /*

@@ -35,7 +35,7 @@ import com.ymcmp.lcode.ast.ListExpr;
 import com.ymcmp.lcode.ast.SubscriptExpr;
 import com.ymcmp.lcode.ast.SymbolExpr;
 import com.ymcmp.lcode.ast.MapExpr;
-import com.ymcmp.lcode.objutils.ObjUtils;
+import com.ymcmp.objutils.ObjUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -21,95 +21,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ymcmp.lcode.objutils;
+package com.ymcmp.objutils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author plankp
  */
-public interface ObjUtils {
+class ObjUtilsIs implements ObjUtils {
 
-    public ObjUtils is(Object b);
+    private final List<Object> cmpList = new ArrayList<>();
 
-    public ObjUtils or();
+    private ObjUtils parentNode;
 
-    public boolean translate();
-
-    public Object getBaseVal();
-
-    public static ObjUtils apply(Object val) {
-        return new ObjUtilsImpl(val);
+    public ObjUtilsIs(Object a, Object b) {
+        this(null, a, b);
     }
-}
 
-/**
- * 
- * @author plankp
- */
-class ObjUtilsTerminalTrue implements ObjUtils {
-
-    private ObjUtilsIs pat;
+    public ObjUtilsIs(ObjUtils parent, Object a, Object b) {
+        parentNode = parent;
+        this.cmpList.add(a);
+        this.cmpList.add(b);
+    }
 
     @Override
     public ObjUtils is(Object b) {
-        return pat = new ObjUtilsIs(true, b);
-    }
-
-    @Override
-    public ObjUtils or() {
+        this.cmpList.add(b);
         return this;
     }
 
     @Override
-    public boolean translate() {
-        if (pat == null) {
-            return true;
-        }
-        return pat.translate();
-    }
-
-    @Override
-    public Object getBaseVal() {
-        return true;
-    }
-}
-
-/**
- * 
- * @author plankp
- */
-class ObjUtilsImpl implements ObjUtils {
-
-    private final Object a;
-
-    private ObjUtils child;
-
-    public ObjUtilsImpl(Object val) {
-        this.a = val;
-    }
-
-    @Override
-    public Object getBaseVal() {
-        return a;
-    }
-
-    @Override
-    public ObjUtils is(Object b) {
-        ObjUtilsIs obj = new ObjUtilsIs(a, b);
-        child = obj;
-        return obj;
-    }
-
-    @Override
     public ObjUtils or() {
-        if (child == null) {
-            return new ObjUtilsTerminalTrue();
-        }
-        return child = new ObjUtilsOr(this);
+        return new ObjUtilsOr(this);
+    }
+
+    @Override
+    public Object getBaseVal() {
+        return cmpList.get(0);
     }
 
     @Override
     public boolean translate() {
-        return child.translate();
+        if (parentNode != null) {
+            // Used for conditions like Or
+            final ObjUtils tmp = parentNode;
+            parentNode = null; // parent *translate* this will call the other part
+            final boolean ret = tmp.translate();
+            parentNode = tmp; // Restore old parentNode
+            return ret;
+        }
+        boolean ret = true;
+        final Object first = cmpList.get(0);
+        final int size = cmpList.size();
+        for (int i = 1; i < size; i++) {
+            if (!ret) {
+                break;
+            }
+            ret = Objects.equals(first, cmpList.get(i));
+        }
+        return ret;
     }
+
 }

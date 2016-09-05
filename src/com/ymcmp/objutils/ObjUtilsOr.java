@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ymcmp.lcode.objutils;
+package com.ymcmp.objutils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author plankp
  */
 class ObjUtilsOr implements ObjUtils {
@@ -45,7 +45,12 @@ class ObjUtilsOr implements ObjUtils {
 
     @Override
     public ObjUtils is(Object b) {
-        ObjUtils inst = new ObjUtilsIs(this, getBaseVal(), b);
+        ObjUtils inst;
+        if (cmpList.get(0) instanceof ObjUtilsImpl) {
+            inst = ObjUtils.apply(true);
+        } else {
+            inst = new ObjUtilsIs(this, getBaseVal(), b);
+        }
         cmpList.add(inst);
         return inst;
     }
@@ -58,7 +63,14 @@ class ObjUtilsOr implements ObjUtils {
     @Override
     public boolean translate() {
         for (int i = 0; i < cmpList.size(); i++) {
-            if (cmpList.get(i).translate()) {
+            final ObjUtils get = cmpList.get(i);
+            if (get instanceof ObjUtilsImpl) {
+                if (ObjUtilsImpl.isTruthy(get.getBaseVal())) {
+                    return true;
+                }
+                continue;
+            }
+            if (get.translate()) {
                 return true;
             }
         }

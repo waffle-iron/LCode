@@ -70,7 +70,7 @@ public class MapExpr extends Expr {
     @Override
     public String toTree() {
         if (exprs.length == 0) {
-            return "(list)";
+            return "(map)";
         }
         return Arrays.asList(exprs)
                 .stream()

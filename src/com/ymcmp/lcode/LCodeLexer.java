@@ -12,6 +12,7 @@ import java.util.List;
  * The list of tokens:
  * <p>
  * _ = [ \t\r\n]* <br>
+ *   | '#' ![\r\n]* <br>
  * BOOL (ident) = 'true' | 'false' <br>
  * SYM (ident) = '$' [a-zA-Z0-9$_]* [?!]? <br>
  * IDENT = [a-zA-Z][a-zA-Z0-9$_]* [?!]? <br>
@@ -58,6 +59,18 @@ public class LCodeLexer {
                         break;
                     }
                     buf.append(arr[i]);
+                }
+                i--;
+                tokens.add(new Token("_", buf.toString()));
+            } else if (current == '#') {
+                StringBuilder buf = new StringBuilder();
+                buf.append(current);
+                for (i++; i < arr_len; i++) {
+                    char c = arr[i];
+                    if (c == '\r' || c == '\n') {
+                        break;
+                    }
+                    buf.append(c);
                 }
                 i--;
                 tokens.add(new Token("_", buf.toString()));

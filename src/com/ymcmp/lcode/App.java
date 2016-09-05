@@ -19,7 +19,7 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        List<Token> apply = new LCodeLexer("[[a b : [c : '(a b c)]](10 20)(30)->0]()").apply();
+        List<Token> apply = new LCodeLexer("{&a : 10 &b : 1.7 &c : [a : a](6) &d : {} &e : '()}").apply();
         LCodeParser parser = new LCodeParser(apply);
         System.out.println("Raw tokens:");
         parser.tokens.forEach(System.out::print);

@@ -34,7 +34,7 @@ now: Does not exist as of now. Will have different syntax.
 
 pre-1.0: `{ a, 10 b, 11 }`
 
-now: `{ &a: 10 &b: 11 }` Note: this is the closest representation since `&` detonates a symbol
+now: `{ $a: 10 $b: 11 }` Note: this is the closest representation since `$` detonates a symbol
 
 ### List syntax
 

@@ -63,4 +63,23 @@ public class SubscriptExpr extends Expr {
     public String toTree() {
         return String.format("(subs %s %s)", subscriptBase.toTree(), subspos.toTree());
     }
+    
+    
+    @Override
+    public Expr optimize() {
+        final Expr subsBaseOpt = subscriptBase.optimize();
+        final Expr subsPosOpt = subspos.optimize();
+
+        if (subsBaseOpt instanceof ListExpr) {
+            final ListExpr list = (ListExpr) subsBaseOpt;
+            if (subsPosOpt instanceof IntExpr) {
+                int index = ((IntExpr) subsPosOpt).toInt();
+                if (index < list.getChildNodes() && index > -1) {
+                    return list.getChildNode(index);
+                } else throw new AssertionError("Attempt to subscript position of " + index);
+            }
+        }
+
+        return new SubscriptExpr(subsBaseOpt, subsPosOpt);
+    }
 }

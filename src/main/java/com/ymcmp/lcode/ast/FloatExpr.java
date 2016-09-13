@@ -35,6 +35,16 @@ public class FloatExpr extends NumberExpr {
         this.text = val;
     }
 
+    public FloatExpr(double val) {
+        String s = Double.toString(val);
+        if (!(Double.isNaN(val) || Double.isInfinite(val))) {
+            if (!s.contains(".")) {
+                s = s.concat(".0");
+            }
+        }
+        text = s;
+    }
+
     @Override
     public String getText() {
         return text;
@@ -48,5 +58,15 @@ public class FloatExpr extends NumberExpr {
     @Override
     public Expr getChildNode(int nodeIndex) {
         return nodeIndex == 0 ? this : EmptyExpr.getInstance();
+    }
+
+    @Override
+    public int toInt() {
+        return (int) toDouble();
+    }
+
+    @Override
+    public double toDouble() {
+        return Double.parseDouble(text);
     }
 }

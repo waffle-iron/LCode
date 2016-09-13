@@ -36,10 +36,7 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        List<Token> apply = new LCodeLexer(""
-                + "#| A map...\n"
-                + "| And stuff..\n"
-                + "{$a : 10 $b : 1.7 $c : [a : a](6) $d : {} $e : '()}").apply();
+        List<Token> apply = new LCodeLexer("'(1 2 3)->0").apply();
         LCodeParser parser = new LCodeParser(apply);
         System.out.println("Raw tokens:");
         parser.tokens.forEach(System.out::print);
@@ -48,5 +45,8 @@ public class App {
         System.out.println(ast.getText());
         System.out.println("Tree:");
         System.out.println(ast.toTree());
+        System.out.println("Post-op tree:");
+        final Expr optedAst = ast.optimize();
+        System.out.println(optedAst.toTree());
     }
 }

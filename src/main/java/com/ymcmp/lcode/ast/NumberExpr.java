@@ -29,4 +29,8 @@ package com.ymcmp.lcode.ast;
  */
 public abstract class NumberExpr extends Expr {
 
+    public abstract int toInt();
+
+    public abstract double toDouble();
+
 }

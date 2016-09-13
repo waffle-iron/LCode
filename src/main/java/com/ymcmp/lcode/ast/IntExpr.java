@@ -35,6 +35,10 @@ public class IntExpr extends NumberExpr {
         this.text = val;
     }
 
+    public IntExpr(int val) {
+        this.text = Integer.toString(val);
+    }
+
     @Override
     public String getText() {
         return text;
@@ -48,5 +52,15 @@ public class IntExpr extends NumberExpr {
     @Override
     public Expr getChildNode(int nodeIndex) {
         return nodeIndex == 0 ? this : EmptyExpr.getInstance();
+    }
+
+    @Override
+    public int toInt() {
+        return Integer.parseInt(text);
+    }
+
+    @Override
+    public double toDouble() {
+        return toInt();
     }
 }

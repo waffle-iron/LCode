@@ -44,4 +44,8 @@ public abstract class Expr implements Serializable {
     public String toTree() {
         return String.format("(%s)", getText());
     }
+
+    public Expr optimize() {
+        return this;
+    }
 }

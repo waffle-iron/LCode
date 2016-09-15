@@ -1,14 +1,16 @@
 # LCode
 When Javascript meets Lambda expressions (This only applied to pre-1.0)
 
+[![Build Status](https://travis-ci.org/plankp/LCode.svg?branch=master)](https://travis-ci.org/plankp/LCode)
+
 # How to test this?
 
-You will need java8 and ant to be installed. Alternatively, you could choose to install the Netbeans IDE.
+You will need jdk8 (or higher) to be installed.
 
 Currently, the parser only converts the predefined source code into an AST.
 The optimizer and potentially, the runtime is not being worked on so far. (It will be worked on when the grammar supports most pre-1.0 constructs)
 
-To run the sample code with ant, do <code>ant run</code>
+To run the tests, do `./gradlew check`. To test the default script, do `./gradlew run` instead.
 
 # Incompatibilities between LCode and LCode pre-1.0
 

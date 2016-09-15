@@ -1,0 +1,8 @@
+language: java
+before_cache:
+  - rm -f  /home/ubuntu/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr /home/ubuntu/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - /home/ubuntu/.gradle/caches/
+    - /home/ubuntu/.gradle/wrapper/

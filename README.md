@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/plankp/LCode.png?label=ready&title=Ready)](https://waffle.io/plankp/LCode)
 # LCode
 When Javascript meets Lambda expressions (This only applied to pre-1.0)
 
